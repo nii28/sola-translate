@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLA Translate Pro - Ultimate Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffafcc;
+            --secondary: #cdb4db;
+            --accent: #a2d2ff;
+            --sidebar-bg: #fff0f3;
+            --main-bg: #fff9fb;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--main-bg);
+            color: #4a4a4a;
+            overflow: hidden;
+        }
+
+        .sidebar-item {
+            transition: all 0.3s;
+            cursor: pointer;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-item.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 175, 204, 0.4);
+        }
+
+        .sidebar-item:not(.active):hover {
+            background-color: #ffe5ec;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .content-section.active {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anime-card {
+            background: white;
+            border: 2px solid #fce4ec;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .glass-input {
+            border: 2px solid #fce4ec;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .glass-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 175, 204, 0.2);
+            outline: none;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 700;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 175, 204, 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <!-- SIDEBAR NAV -->
+    <aside class="w-72 bg-[#fff0f3] flex flex-col p-6 border-r-2 border-pink-100 shadow-xl z-10">
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-extrabold text-pink-500 tracking-tight">☀️ SOLA <span class="text-xs block font-medium opacity-70 italic text-pink-400">Translate Pro</span></h1>
+        </div>
+
+        <nav class="flex-1">
+            <div onclick="showSection('instant')" id="nav-instant" class="sidebar-item active p-4 flex items-center gap-3 font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                Thông dịch nhanh
+            </div>
+            <div onclick="showSection('file')" id="nav-file" class="sidebar-item p-4 flex items-center gap-3 font-bold text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                Dịch tệp văn bản
+            </div>
+            <div onclick="showSection('cleaner')" id="nav-cleaner" class="sidebar-item p-4 flex items-center gap-3 font-bold text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                Làm sạch Raw
+            </div>
+            <div onclick="showSection('settings')" id="nav-settings" class="sidebar-item p-4 flex items-center gap-3 font-bold text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                Cài đặt & Hướng dẫn
+            </div>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-pink-200">
+            <button onclick="location.reload()" class="w-full flex items-center justify-center gap-2 p-3 text-pink-500 font-bold hover:bg-pink-100 rounded-xl transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                Làm mới trang
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        
+        <!-- SECTION: INSTANT TRANSLATE -->
+        <div id="section-instant" class="content-section active">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">⚡ Thông dịch nhanh</h2>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-bold text-pink-500 uppercase">Ngôn ngữ đích:</span>
+                    <select id="instantLang" class="p-3 glass-input text-sm font-bold text-pink-600 bg-white shadow-sm">
+                        <option value="Vietnamese">Tiếng Việt</option>
+                        <option value="Japanese">Tiếng Nhật</option>
+                        <option value="English">Tiếng Anh</option>
+                        <option value="Korean">Tiếng Hàn</option>
+                        <option value="Chinese">Tiếng Trung</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="anime-card p-6 flex flex-col gap-4 h-full max-h-[calc(100vh-200px)]">
+                <div>
+                    <label class="block text-xs font-bold text-pink-600 mb-2 uppercase tracking-widest">✨ Custom Prompt cho AI</label>
+                    <input id="instantPrompt" type="text" placeholder="Ví dụ: Dịch phong cách anime đời thường, xưng hô 'tớ - cậu'..." class="w-full p-4 glass-input bg-pink-50/20">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6 flex-1 min-h-0">
+                    <div class="flex flex-col">
+                        <label class="text-xs font-bold text-gray-400 mb-2 uppercase">Văn bản gốc</label>
+                        <textarea id="instantInput" class="flex-1 p-4 glass-input resize-none bg-gray-50/50" placeholder="Dán văn bản vào đây..."></textarea>
+                    </div>
+                    <div class="flex flex-col relative">
+                        <label class="text-xs font-bold text-gray-400 mb-2 uppercase">Bản dịch từ SOLA</label>
+                        <div id="instantOutput" class="flex-1 p-4 glass-input bg-white overflow-y-auto whitespace-pre-wrap text-gray-700">Chưa có nội dung dịch...</div>
+                        <div id="instantLoader" class="absolute inset-0 bg-white/80 hidden flex flex-col items-center justify-center rounded-2xl z-20">
+                            <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-pink-500 mb-2"></div>
+                            <span class="text-pink-500 font-bold">SOLA đang xử lý...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="startInstantTranslate()" class="btn-gradient py-4 text-xl">Bắt đầu dịch ngay</button>
+            </div>
+        </div>
+
+        <!-- SECTION: FILE TRANSLATE -->
+        <div id="section-file" class="content-section">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">📂 Dịch tệp văn bản (.txt)</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+                <div class="lg:col-span-1 flex flex-col gap-6">
+                    <div class="anime-card p-8 text-center border-dashed border-4 border-blue-200 bg-blue-50/30">
+                        <input type="file" id="txtFile" accept=".txt" class="hidden" onchange="handleFileSelect(this)">
+                        <div class="mb-4 text-blue-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                        </div>
+                        <button onclick="document.getElementById('txtFile').click()" class="bg-blue-500 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg">Chọn tệp TXT</button>
+                        <p id="fileNameStatus" class="mt-4 text-sm text-blue-600 font-medium italic italic">Chưa có tệp nào được chọn</p>
+                    </div>
+
+                    <div class="anime-card p-6">
+                        <label class="block text-xs font-bold text-blue-600 mb-2 uppercase">Cấu hình dịch</label>
+                        <select id="targetFileLang" class="w-full p-3 glass-input mb-4 font-bold text-blue-600">
+                            <option value="Vietnamese">Sang Tiếng Việt</option>
+                            <option value="Japanese">Sang Tiếng Nhật</option>
+                            <option value="English">Sang Tiếng Anh</option>
+                            <option value="Korean">Sang Tiếng Hàn</option>
+                            <option value="Chinese">Sang Tiếng Trung</option>
+                        </select>
+                        <label class="block text-xs font-bold text-blue-600 mb-2 uppercase">Custom Prompt</label>
+                        <textarea id="filePrompt" rows="3" class="w-full p-3 glass-input bg-blue-50/10 text-sm" placeholder="Hướng dẫn cụ thể cho AI..."></textarea>
+                        <button onclick="translateFullFile()" class="w-full mt-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-white py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition-all">TIẾN HÀNH DỊCH & TẢI VỀ</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 anime-card p-6 bg-gray-900 text-green-400 font-mono text-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-8 bg-gray-800 flex items-center px-4 gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="ml-2 text-[10px] text-gray-400 uppercase tracking-tighter">Preview Content</span>
+                    </div>
+                    <div id="filePreview" class="mt-8 h-full overflow-y-auto whitespace-pre-wrap opacity-70">Nội dung tệp sẽ hiển thị xem trước tại đây sau khi tải lên...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: CLEANER -->
+        <div id="section-cleaner" class="content-section">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🧹 Làm sạch Raw văn bản</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 h-full">
+                <div class="md:col-span-3 flex flex-col gap-4">
+                    <div class="anime-card flex-1 p-6 flex flex-col">
+                        <label class="text-xs font-bold text-orange-400 mb-2 uppercase">Nội dung cần lọc</label>
+                        <textarea id="cleanerInput" class="flex-1 p-4 glass-input bg-orange-50/5 resize-none font-medium text-gray-600" placeholder="Dán văn bản raw của bạn vào đây (ví dụ: raw truyện Nhật lẫn tiếng Trung)..."></textarea>
+                    </div>
+                </div>
+                <div class="md:col-span-1 flex flex-col gap-4">
+                    <div class="anime-card p-6 bg-orange-50 border-orange-200">
+                        <h4 class="font-bold text-orange-700 mb-4 text-center border-b border-orange-200 pb-2">CHỌN NGÔN NGỮ GIỮ LẠI</h4>
+                        <div class="flex flex-col gap-3">
+                            <button onclick="cleanText('ja')" class="py-4 bg-white border-2 border-orange-300 text-orange-600 font-bold rounded-2xl hover:bg-orange-600 hover:text-white transition-all">TIẾNG NHẬT</button>
+                            <button onclick="cleanText('zh')" class="py-4 bg-white border-2 border-orange-300 text-orange-600 font-bold rounded-2xl hover:bg-orange-600 hover:text-white transition-all">TIẾNG TRUNG</button>
+                            <button onclick="cleanText('ko')" class="py-4 bg-white border-2 border-orange-300 text-orange-600 font-bold rounded-2xl hover:bg-orange-600 hover:text-white transition-all">TIẾNG HÀN</button>
+                            <button onclick="cleanText('en')" class="py-4 bg-white border-2 border-orange-300 text-orange-600 font-bold rounded-2xl hover:bg-orange-600 hover:text-white transition-all">TIẾNG ANH</button>
+                        </div>
+                        <p class="mt-4 text-[10px] text-orange-400 italic text-center leading-tight">SOLA sẽ xóa tất cả các ký tự không thuộc bảng chữ cái của ngôn ngữ bạn chọn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: SETTINGS & GUIDE -->
+        <div id="section-settings" class="content-section">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">⚙️ Cài đặt & Hướng dẫn sử dụng</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- API KEY -->
+                <div class="anime-card p-8 bg-purple-50 border-purple-200">
+                    <h3 class="text-xl font-bold text-purple-700 mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                        Gemini API Key
+                    </h3>
+                    <p class="text-sm text-purple-600 mb-6 leading-relaxed">Key được lưu an toàn trong trình duyệt của bạn. Để sử dụng dịch thuật AI, bạn cần có API Key từ Google AI Studio.</p>
+                    <div class="flex flex-col gap-4">
+                        <input type="password" id="apiKeyInput" placeholder="Dán key tại đây (AIZA...)" class="w-full p-4 glass-input bg-white shadow-inner">
+                        <button onclick="saveKey()" class="w-full py-4 bg-purple-600 text-white font-bold rounded-2xl shadow-lg hover:bg-purple-700 transition-all">LƯU CẤU HÌNH</button>
+                    </div>
+                </div>
+
+                <!-- GUIDE & TIPS -->
+                <div class="anime-card p-8 bg-pink-50 border-pink-200">
+                    <h3 class="text-xl font-bold text-pink-700 mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Mẹo & Hướng dẫn
+                    </h3>
+                    <div class="space-y-4 text-pink-800 text-sm">
+                        <div class="flex gap-3">
+                            <span class="bg-white w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-sm">1</span>
+                            <p><b>Dịch Anime/LN:</b> Hãy dùng Prompt <i>"Dịch phong cách Light Novel, xưng hô anh/em, dùng từ ngữ bay bổng"</i> để kết quả tự nhiên nhất.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="bg-white w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-sm">2</span>
+                            <p><b>Dịch tệp lớn:</b> AI có giới hạn bộ nhớ mỗi lần gọi. Nếu tệp quá dài, hãy chia nhỏ nội dung tệp .txt trước khi dịch.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="bg-white w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-sm">3</span>
+                            <p><b>Làm sạch Raw:</b> Công cụ này cực kỳ hữu ích để xóa bớt các dòng chú thích tiếng Trung trong bản scan Nhật lậu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-10 right-10 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+        <div class="bg-white border-2 border-pink-400 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
+            <div id="toastIcon" class="text-2xl">🌸</div>
+            <div id="toastMsg" class="font-bold text-pink-600 text-sm">Thông báo từ SOLA</div>
+        </div>
+    </div>
+
+    <script>
+        let apiKey = localStorage.getItem('sola_v3_key') || '';
+        document.getElementById('apiKeyInput').value = apiKey;
+        let selectedFileContent = "";
+
+        // --- Navigation Logic ---
+        function showSection(id) {
+            // Update Navigation UI
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active', 'text-pink-500');
+                item.classList.add('text-gray-600');
+            });
+            document.getElementById(`nav-${id}`).classList.add('active');
+            document.getElementById(`nav-${id}`).classList.remove('text-gray-600');
+
+            // Switch Content
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`section-${id}`).classList.add('active');
+        }
+
+        // --- UI Utilities ---
+        function showToast(msg, icon = '🌸') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = icon;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toa
